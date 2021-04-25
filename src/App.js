@@ -1,24 +1,36 @@
-import logo from './logo.svg';
+import Navbar from './components/navbar'
+import LogIn from './components/sign-in/sign-in'
+import Registration from './components/sign-up/sign-up'
+import CreateContact from './components/create-contact/create-contact'
+import ContactList from './components/contact-list/contact-list'
+
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import './App.css';
+import React, {useState} from 'react'
 
 function App() {
+
+  const [authed, setAuthed] = useState(false)
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Router>
+        <Navbar  />
+        <Switch>
+          <Route exact path='/' 
+            render={() => authed ? 
+              <ContactList />
+              :
+              <LogIn setAuthed={setAuthed} />} />
+            
+            <Route  path="/registration">
+              <Registration />
+            </Route>
+
+            <Route path="/createContact">
+              <CreateContact />
+            </Route>
+        </Switch>
+      </Router>
   );
 }
 
