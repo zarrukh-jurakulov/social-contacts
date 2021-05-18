@@ -1,95 +1,135 @@
-import React, {useState} from 'react'
+import React from 'react'
 import './style.css'
 import {Link} from 'react-router-dom'
 import axiosClient from '../../helpers/axiosClient'
 import { setToken } from '../../helpers/storages'
+import {useHistory} from "react-router-dom"
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-const LogIn = ({setAuthed}) => {
+
+
+const SignInForm = () => {
+
+  const signInSchema = Yup.object().shape({
+
+    username: Yup.string()
+      .required("username is required")
+      .min(2, "very short")
+      .max(15, "very long"),
+      
+    password: Yup.string()
+      .required("Password is required")
+      .min(5, "Password is too short - should be 4 chars min")
+      .max(15, "Should not exced 6 symbols")
+      .uppercase("only uppercase accepted")
+  })
+    
+  const initialValues = {
+    username: "",
+    password: ""
+  };
+
+ let history = useHistory()
  
+    // const logIn = () => {
+    //         axiosClient().post("/auth/login", {
+    //           username: signInSchema.password,
+    //           password: signInSchema.password,
+    //         }).then((res) => {
+    //           setToken(res.data.token)
+    //           //localStorage.token = ;
+    //           console.log('>> response :', res);
+    //           console.log("valuesss",signInSchema);
+    //           if(res.status === 200){
+    //             history.push("/profile")
+    //           }
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-
-    const [alert, setAlert] = useState('')
-
-    const handleUserName = (e) => {
-        setUsername(e.target.value)
-    }
-
-    const handlePassword = (e) => {
-        setPassword(e.target.value)
-    }
-
-    // if(username.length < 2){
-    //   setAlert('Do not write the username less than 2 symbolls')
-    // } else if(username.length > 255) {
-    //   setAlert('Do not write the username more than 255 symbolls')
-    // } else if(password.length < 8) {
-    //   setAlert('Do not write the password less than 8 symbolls ')
-    // } else if (password.length > 65){
-    //   setAlert('Do not write the password more than 65 symbolls')
-    // }else {}
- 
-    const logIn = () => {
-          if(username.length < 2){
-            setAlert('Do not write the username less than 2 symbolls')
-          }else if(username.length > 255) {
-            setAlert('Do not write the username more than 255 symbolls')
-          }else if(password.length < 8) {
-            setAlert('Do not write the password less than 8 symbolls ')
-          }else if (password.length > 65){
-            setAlert('Do not write the password more than 65 symbolls')
-          }else {
-            axiosClient().post("/auth/login", {
-              username: username,
-              password: password,
-            }).then((res) => {
-              setToken(res.data.token)
-              //localStorage.token = ;
-              console.log('>> response :', res);
-
-              if(res.status === 200){
-                setAuthed(true)
-              }
-              console.log(res.status);
+    //           console.log(res.status);
               
-            })
-            .catch((err) => {
-              console.log('>> error :', err);
-            });   
-          }
-        
-       
-    }
+    //         })
+    //         .catch((err) => {
+    //           console.log('>> error :', err);
+    //         });   
+    // }
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={signInSchema}
+      onSubmit={async (values) => {
+        await axiosClient().post("/auth/login", {
+                username: values.username,
+                password: values.password,
+              }).then((res) => {
+                setToken(res.data.token)
+                  console.log('>> response :', res);
+                  if(res.status === 200){
+                  history.push("/profile")
+                }
+                })
+                .catch((err) => {
+                  console.log('>> error :', err);
+                });   
+                  console.log(">> input values :",values);
+    }}>
+      {(formik) => {
+        const { errors, touched, isValid, dirty } = formik;
+        return (
+          <div className="login-page">
+            <h1>Sign in to continue</h1>
+            <Form className="form-container">
 
-    return (
-           <div className="log_in_page">
-            <h3>Log In</h3>
-            <div className="alert_container">
-              {alert}
-            </div>
-            <div className='log_in_container'>
-                <div>
-                  <p>Username</p>
-                <input type="text" name="name" id="usename" onChange={handleUserName}/>  
-                </div>
-                <div>
-                   <p>Password</p>
-                <input type="password" name="password" id="password" onChange={handlePassword}/> 
-                </div>
-                
-                <button className='submitBtn' onClick={logIn}>Submit</button>
-                <div className='changeDirection'>
-                    <p>
-                        Don't you have an account ? 
-                        <Link to="/registration"> Register</Link>
-                    </p>
-                </div>
-            </div>
-        </div> 
-       
-        
-    )
-}
+              <div className="form-row">
+                <label htmlFor="username">Username</label><br />
+                  <Field
+                  type="text"
+                  name="username"
+                  id="username"
+                  className={
+                    errors.username && touched.username ? "input-error" : null
+                  }
+                  />
+                  <ErrorMessage name="username" component="span" className="error" />
+              </div>
 
-export default LogIn
+              <div className="form-row">
+                <label htmlFor="password">Password</label><br />
+                <Field
+                  type="password"
+                  name="password"
+                  id="password"
+                  className={
+                    errors.password && touched.password ? "input-error" : null
+                  }
+                />
+                <ErrorMessage
+                  name="password"
+                  component="span"
+                  className="error"
+                />
+              </div>
+
+              <button id="loginBtn"
+                type="submit"
+                className={!(dirty && isValid) ? "disabled-btn" : ""}
+                disabled={!(dirty && isValid)}
+              >
+                Sign In
+              </button>
+
+              <div className='directToRegiter'>
+              <p>You do not have account ? <Link to='/registration'>Register</Link></p>
+            </div>
+            </Form>
+          </div>
+        );
+      }}
+     
+    </Formik>
+    
+  );
+};
+
+export default SignInForm;
+
+

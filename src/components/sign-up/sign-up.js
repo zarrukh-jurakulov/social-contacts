@@ -1,126 +1,155 @@
 import React, {useState} from 'react'
 import './style.css'
-import {Link} from 'react-router-dom'
-// import axios from 'axios'
+import {Link, useHistory} from 'react-router-dom'
 import axiosClient from '../../helpers/axiosClient'
+import * as Yup from "yup"
+import {Formik, Form, Field, ErrorMessage} from 'formik'
 
 const Registration = () => {
 
-    const [username, setUsername] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [alert, setAlert] = useState('')
+  const signUpSchema = Yup.object().shape({
+      username: Yup.string()
+      .required("username is required")
+      .min(2, "very short")
+      .max(15, "very long"),
 
-//    const [registrationData, setRegistrationData] = useState([])
+      first_name: Yup.string()
+      .required("first name is required")
+      .min(2, "very short")
+      .max(15, "very long"),
 
-    const handleUsername = (e) => {
-        setUsername(e.target.value)
-        if(username.length < 2){
-            setAlert('Do not write the username less than 2 symbolls')
-        } else if(username.length > 255) {
-            setAlert('Do not write the username more than 255 symbolls')
-        }
-    }
+      last_name: Yup.string()
+      .required("last name is required")
+      .min(2, "very short")
+      .max(15, "very long"),
 
-    const handleFirstName = (e) => {
-        setFirstName(e.target.value)
-    }
+      email : Yup.string()
+      .required("email is required")
+      .email("invalid email format")
+      .min(2, "very short")
+      .max(50, "very long"),
 
-    const handleLastName = (e) => {
-        setLastName(e.target.value)
-    }
-
-    const handleEmail = (e) => {
-        setEmail(e.target.value)
-    } 
-
-    const handlePassword = (e) => {
-        setPassword(e.target.value)
-    }
+      password : Yup.string()
+      .required("password is required")
+      .min(4, "very short")
+      .max(15, "very long")
+  }) 
+    
+  const initialValues = {
+    email: "",
+    first_name: "",
+    last_name: "",
+    password: "",
+    username: ""
+  }
 
    
-    
+    let history = useHistory()
     const signUp = () => {
-
-        if(username.length < 2){
-            setAlert('Do not write the username less than 2 symbolls')
-        } else if(username.length > 255) {
-            setAlert('Do not write the username more than 255 symbolls')
-        }else if(firstName.length < 2) {
-            setAlert('Do not write the first name less than 2 symbolls')
-        }else if(firstName.length > 250){
-            setAlert('Do not write the first name more than 255 symbolls')
-        }else if(lastName.length < 2) {
-            setAlert('Do not write the last name less than 2 symbolls')
-        }else if(lastName.length >250) {
-            setAlert('Do not write the last name more than 255 symbolls')
-        }else if(email < 1){
-            setAlert("Do not write the email less than 1 symbolls")
-        }else if(email.length > 150){
-            setAlert('Do not write the email more than 254 symbolls')
-        }else if(password.length < 8) {
-            setAlert('Do not write the password less than 8 symbolls ')
-        }else if (password.length > 65){
-            setAlert('Do not write the password more than 65 symbolls')
-        }else{
-            setAlert("")
             axiosClient().post("/auth/register", {
-            email: email,
-            first_name: firstName,
-            last_name: lastName,
-            password: password,
-            username: username,
+            // email: email,
+            // first_name: firstName,
+            // last_name: lastName,
+            // password: password,
+            // username: username,
         })
         .then((res) => {
           localStorage.token = res.data.token;
-          console.log('res', res);
-        //  setRegistrationData(res)
+            console.log('res', res);
+          if(res.status === 201){
+            history.push("/")  
+          }
         })
         .catch((err) => {
           console.log('err', err);
         });
-        }
-
-        
     };
 
 
 
     return (
-        <div className='registration_page'>
-            <h3>Sign Up</h3> 
-            <div className='alert_container'>
-                {alert}
-            </div>
-            <div className='registration_container'>
-                <div>
-                    <p>Username</p>
-                    <input type="text" name="name" id="username" onChange={handleUsername}/>
-                </div>
-                <div>
-                    <p>First Name</p>
-                    <input type="text" name="first_name" id="first_name" onChange={handleFirstName}/>
-                </div>
-                <div>
-                    <p>Last Name</p>
-                    <input type="text" name="last_name" id="last_name" onChange={handleLastName}/>
-                </div>
-                <div>
-                    <p>Email</p>
-                    <input type="email" name="email" id="email" onChange={handleEmail}/>
-                </div>
-                <div>
-                    <p>Password</p>
-                    <input type="password" name="password" id="password" onChange={handlePassword}/>
-                </div>
-                <button className='registerBtn' onClick={signUp}>Submit</button>
-                <div className='changeDirection'>
-                    <p>Already have an account? <Link to='/'>Login</Link> </p>
-                </div>
-            </div>
-        </div>
+        <Formik
+        initialValues = {initialValues}
+        validationSchema = {signUpSchema}
+        onSubmit={async (values)=>{
+            await  axiosClient().post("/auth/register", {
+                email: values.email,
+                first_name: values.first_name,
+                last_name: values.last_name,
+                password: values.password,
+                username: values.username,
+            })
+            .then((res) => {
+              localStorage.token = res.data.token;
+                console.log('res', res);
+              if(res.status === 201){
+                history.push("/")  
+              }
+            })
+            .catch((err) => {
+              console.log('err', err);
+            });
+        }}>
+            {(formik) => {
+                const {errors, touched, isValid, dirty} = formik
+                return (
+                    <div className="sign-up-page">
+                        <h1>Sign up here</h1>
+                        <Form className="form-container-register">
+                            <div className="form-row">
+                                <label htmlFor="username">Username</label>
+                                <Field type="text" name="username" id="username"  className={
+                                     errors.username && touched.username ? "input-error" : null
+                                     } />
+                                      <ErrorMessage name="username" component="span" className="error" />
+                            </div>
+
+                            <div className="form-row">
+                                <label htmlFor="first_name">First name</label>
+                                <Field type="text" name="first_name" id="first_name"  className={
+                                     errors.first_name && touched.first_name ? "input-error" : null
+                                     } />
+                                      <ErrorMessage name="first_name" component="span" className="error" />
+                            </div>
+
+                            <div className="form-row">
+                                <label htmlFor="last_name">Last name</label>
+                                <Field type="text" name="last_name" id="last_name"  className={
+                                     errors.last_name && touched.last_name ? "input-error" : null
+                                     } />
+                                      <ErrorMessage name="last_name" component="span" className="error" />
+                            </div>
+
+                            <div className="form-row">
+                                <label htmlFor="email">Email</label>
+                                <Field type="text" name="email" id="email"  className={
+                                     errors.email && touched.email ? "input-error" : null
+                                     } />
+                                      <ErrorMessage name="email" component="span" className="error" />
+                            </div>
+
+                            <div className="form-row">
+                                <label htmlFor="password">Password</label>
+                                <Field type="text" name="password" id="password"  className={
+                                     errors.password && touched.password ? "input-error" : null
+                                     } />
+                                      <ErrorMessage name="password" component="span" className="error" />
+                            </div>
+                            <button id="loginBtn"
+                                 type="submit"
+                                 className={!(dirty && isValid) ? "disabled-btn" : ""}
+                                 disabled={!(dirty && isValid)}>Submit</button>
+
+                            <div className='changeDirection'>
+                                <p>Already have an account? <Link to='/'>Login</Link> </p>
+                            </div>
+                        </Form>
+                    </div>
+                )
+            }}
+            
+        </Formik>
+       
     )
 }
 

@@ -1,6 +1,6 @@
 .createContactPage {
     width: 100%;
-    height: 692px;
+    height:500px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,11 +8,11 @@
 }
 
 .newContactContainer {
-    width: 600px;
-    height: 50vh;
+    width: 500px;
+    height: 40vh;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
     border: 1px solid black;
@@ -30,85 +30,26 @@
     flex-direction: column;
 }
 
-.addFavouriteContact {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.createContactPage input {
+    width: 180px;
+    padding: 5px;
+    outline-style: none;
 }
 
-.form__title {
-    margin: 32px 0;
-    text-align: center;
-    color: #002952;
-}
-
-.form__img-input-container {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    margin: auto;
-}
-
-/* this class is used to hide the file input */
-.visually-hidden {
-    position: absolute;
-    height: 1px;
-    width: 1px;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Adding the focus and focus-within styles for accessibility */
-input.visually-hidden:focus + label,
-input.visually-hidden:focus-within + label {
-    outline: 8px solid rgba(86, 206, 239, .4);
-}
-
-/* The file input is a labeled control, and since we hid it, 
-we're going to use its associated label to trigger it */
-.form-img__file-label {
-    
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-self: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+.createContactPage button {
+    width: 70px;
+    height: 25px;
+    outline-style: none;
+    border: 1px solid black;
+    background-color:cornflowerblue;
     cursor: pointer;
-    background-color: rgba(10, 255, 51, 0.3);
+    color: white;
 }
 
-/* .form-img__file-label:hover {
-    background-color: rgba(245, 245, 231, .5);
-} */
-
-.form-img__file-label > svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    opacity: .7;
-    transform: translate(-50%, -50%);
+.createContactPage button:hover {
+    background-color: rgb(0, 88, 251);
+    color: white;
 }
 
-.form-img__file-label:hover > svg {
-    opacity: 1;
-}
 
-/* The image element is going to be positioned under the 
-label element, since the label is a see through, we're going 
-to be able to see the preview of the image. */
-.form-img__img-preview {
-    display: flex;
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px rgb(53, 2, 235) solid;
-}
+

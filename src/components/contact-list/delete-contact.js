@@ -1,17 +1,14 @@
 import React from 'react'
 import axiosClient from '../../helpers/axiosClient'
 
+
 const DeleteContact = ({id}) => {
-
- 
-
+    
     const deleteButton = () => {
         axiosClient().delete(`/contacts/${id}`)
         .then((res) => {
-          
-         
          console.log(res)
-         
+        window.location.reload(false)
         })
         .catch((err) => {
           console.log('err', err);
@@ -20,7 +17,7 @@ const DeleteContact = ({id}) => {
 
     return (
         <div>
-            <button onClick={deleteButton}>x</button>
+            <button className="deleteBtn" onClick={deleteButton}>x</button>
         </div>
     )
 }

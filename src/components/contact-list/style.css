@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    color: white;
 }
 
 .contact-list-card {
@@ -11,19 +12,22 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-  
+    background-color: royalblue;
     width: 70%;
     height: 50px;
     margin-top: 10px;
 }
 
 .card-start {
-    width: 150px;
-    background-color: burlywood;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
+    margin: 0px 10px;
+}
+
+.card-start p {
+    margin: 0px 10px;
 }
 
 .card-end {
@@ -31,4 +35,17 @@
     align-items: center;
     justify-content: center;
     flex-direction: row;
+    margin: 0px 10px;
 }
+
+.card-end p {
+    margin: 0px 10px;
+}
+
+.deleteBtn {
+    background-color: rgb(248, 66, 66);
+    border: 1px solid black;
+    cursor: pointer;
+    color: white;
+}
+
