@@ -6,7 +6,9 @@
     justify-content: space-between;
     flex-direction: row;
     border-bottom: 2px solid lightgrey;
-   
+    background-color: black;
+    color: lightgray;
+    opacity: 0.85;
 }
 
 .logo_container {
@@ -40,9 +42,10 @@
 #search_input {
     width: 100%;
     height: 30px;
-  
-    border: 1px solid black;
+    background-color: black;
+    border: 1px solid lightgray;
     padding: 5px;
+    color: lightgray;
 }
 
 .create_logout_btn_container {

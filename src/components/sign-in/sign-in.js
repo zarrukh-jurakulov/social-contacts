@@ -6,22 +6,23 @@ import { setToken } from '../../helpers/storages'
 import {useHistory} from "react-router-dom"
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import signInlogo from '../../assets/sign-in-logo.jpg'
+import {signInRequest} from '../../redux/actions/sign-in-actions'
 
 
-
-const SignInForm = () => {
+const SignInForm = () => { 
 
   const signInSchema = Yup.object().shape({
 
     username: Yup.string()
       .required("username is required")
       .min(2, "very short")
-      .max(15, "very long"),
+      .max(25, "very long"),
       
     password: Yup.string()
       .required("Password is required")
       .min(5, "Password is too short - should be 4 chars min")
-      .max(15, "Should not exced 6 symbols")
+      .max(25, "Should not exced 6 symbols")
       .uppercase("only uppercase accepted")
   })
     
@@ -32,31 +33,12 @@ const SignInForm = () => {
 
  let history = useHistory()
  
-    // const logIn = () => {
-    //         axiosClient().post("/auth/login", {
-    //           username: signInSchema.password,
-    //           password: signInSchema.password,
-    //         }).then((res) => {
-    //           setToken(res.data.token)
-    //           //localStorage.token = ;
-    //           console.log('>> response :', res);
-    //           console.log("valuesss",signInSchema);
-    //           if(res.status === 200){
-    //             history.push("/profile")
-    //           }
-
-    //           console.log(res.status);
-              
-    //         })
-    //         .catch((err) => {
-    //           console.log('>> error :', err);
-    //         });   
-    // }
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={signInSchema}
       onSubmit={async (values) => {
+       // values.signInRequest()
         await axiosClient().post("/auth/login", {
                 username: values.username,
                 password: values.password,
@@ -70,38 +52,46 @@ const SignInForm = () => {
                 .catch((err) => {
                   console.log('>> error :', err);
                 });   
-                  console.log(">> input values :",values);
+                  
     }}>
+    
       {(formik) => {
         const { errors, touched, isValid, dirty } = formik;
         return (
           <div className="login-page">
-            <h1>Sign in to continue</h1>
+            <div className="signInLeftColumn">
+               <img src={signInlogo} alt="sign-in-logo" />
+            </div>
+            <div className="signInRightColumn">
+             
             <Form className="form-container">
-
+              <h1>Sign in to continue</h1>
               <div className="form-row">
-                <label htmlFor="username">Username</label><br />
+                
                   <Field
+                  placeholder="Enter username"
                   type="text"
                   name="username"
                   id="username"
+                  
                   className={
                     errors.username && touched.username ? "input-error" : null
                   }
-                  />
+                  /><br />
                   <ErrorMessage name="username" component="span" className="error" />
               </div>
 
               <div className="form-row">
-                <label htmlFor="password">Password</label><br />
+                
                 <Field
+                  placeholder="Enter password"
                   type="password"
                   name="password"
                   id="password"
                   className={
                     errors.password && touched.password ? "input-error" : null
                   }
-                />
+                /><br />
                 <ErrorMessage
                   name="password"
                   component="span"
@@ -118,9 +108,11 @@ const SignInForm = () => {
               </button>
 
               <div className='directToRegiter'>
-              <p>You do not have account ? <Link to='/registration'>Register</Link></p>
+              <p>You do not have an account ? <Link className="redirection" to='/registration'>Register</Link></p>
             </div>
-            </Form>
+            </Form> 
+            </div>
+            
           </div>
         );
       }}

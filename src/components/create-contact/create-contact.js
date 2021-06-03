@@ -2,100 +2,129 @@ import React, {useState} from 'react'
 import './style.css'
 import axiosClient from '../../helpers/axiosClient'
 import { useHistory } from "react-router-dom";
+import logo from '../../assets/contact.jpg'
+import * as Yup from "yup"
+import {Formik, Form, Field, ErrorMessage} from 'formik'
+
 const CreateContact = () => {
-
-    
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [country, setCountry] = useState("Uzbekistan")
-    const [phoneNumber, setPhoneNumber] = useState("+998")
-    const [isFavourite, setIsFavourite] = useState(false)
-   
+  
     const [alert, setAlert] = useState("")
+
     let history = useHistory();
-    
-    
-    
-    const handleFirstName = (e) => {
-        setFirstName(e.target.value)
-    }
 
-    const handleLastNumber = (e) => {
-        setLastName(e.target.value)
-    }
+    const signUpSchema = Yup.object().shape({
+        first_name: Yup.string()
+        .required("First Name is required")
+        .min(2, "very short")
+        .max(25, "very long"),
+  
+        last_name: Yup.string()
+        .required("Last Name is required")
+        .min(2, "very short")
+        .max(25, "very long"),
+  
+        country: Yup.string()
+        .required("Country Name is required")
+        .min(2, "very short")
+        .max(25, "very long"),
+  
+        phone_number : Yup.string()
+        .required("Phone Number is required")
+        .min(4, "very short")
+        .max(25, "very long")
+    }) 
 
-    const handleCountry = (e) => {
-        setCountry(e.target.value)
-    }
-    
-    const handlePhoneNumber = (e) => {
-        setPhoneNumber(e.target.value)
-    }
+    const initialValues = {
+        first_name: "",
+        last_name: "",
+        country: "Uzbekistan",
+        phone_number: "+998"
+      }
 
-
-
- 
-
-    const submitButton = () => {
-        axiosClient().post("/contacts/", {
-            country_code: country,
-            first_name: firstName,
-            last_name: lastName,
-            phone_number: phoneNumber,
-         
-        })
-        .then((res) => {
-          
-          console.log('res', res);
-          if(res.status === 201) {
-              setAlert("Contact is created !")
-              history.goBack()
-          }
-        
-        })
-        .catch((err) => {
-          console.log('err', err);
-        });
-        
-    }
- 
     return (
-        <div className="createContactPage">
-            <div className="message-container">
-                <div className="success-message">
-                    {alert}
-                </div>
-            </div>
-            <div className="newContactContainer">
-                <div className="newContactImg">
-               
-                </div>
-                <div className="newContactInfo">
-                    <div className="firstName">
-                        <p>First Name</p>
-                        <input type="text" name="firstName" id="firstName" onChange={handleFirstName}/>
+        <Formik
+        initialValues = {initialValues}
+        validationSchema = {signUpSchema}
+        onSubmit={async (values)=>{
+            await  axiosClient().post("/contacts/", {
+                country_code: values.country,
+                first_name: values.first_name,
+                last_name: values.last_name,
+                phone_number: values.phone_number,
+             
+            })
+            .then((res) => {
+              
+              console.log('res', res);
+              if(res.status === 201) {
+                  setAlert("Contact is created !")
+                  history.goBack()
+              }
+            
+            })
+            .catch((err) => {
+              console.log('err', err);
+            });
+        }}>
+            {(formik) => {
+                const {errors, touched, isValid, dirty} = formik
+                return (
+                    <div className="sign-up-page">
+                      <div className="signUpLeftColumn">
+                        <img src={logo} alt="signUpLogo" />
+                      </div>
+                      <div className="signUpRightColumn">
+                        
+                        <Form className="form-container-register">
+                         
+                            
+
+                            <div className="form-row">
+                              
+                                <Field type="text" placeholder="Enter First Name" name="first_name" id="first_name"  className={
+                                     errors.first_name && touched.first_name ? "input-error" : null
+                                     } /><br />
+                                      <ErrorMessage name="first_name" component="span" className="error" />
+                            </div>
+
+                            <div className="form-row">
+                                
+                                <Field type="text" placeholder="Enter Last Name" name="last_name" id="last_name"  className={
+                                     errors.last_name && touched.last_name ? "input-error" : null
+                                     } /><br />
+                                      <ErrorMessage name="last_name" component="span" className="error" />
+                            </div>
+
+                            <div className="form-row">
+                                
+                                <Field placeholder="Enter Country" type="text" name="country" id="country"  className={
+                                     errors.country && touched.country ? "input-error" : null
+                                     } /><br />
+                                      <ErrorMessage name="country" component="span" className="error" />
+                            </div>
+
+                            <div className="form-row">
+                                
+                                <Field placeholder="Enter Phone Number" type="text" name="phone_number" id="phone_number"  className={
+                                     errors.phone_number && touched.phone_number ? "input-error" : null
+                                     } /><br />
+                                      <ErrorMessage name="phone_number" component="span" className="error" />
+                            </div>
+                            <button id="loginBtn"
+                                 type="submit"
+                                 className={!(dirty && isValid) ? "disabled-btn" : ""}
+                                 disabled={!(dirty && isValid)}>Submit</button>
+
+                            
+                        </Form>
+                      </div>
+                        
                     </div>
-                    <div className="lastName">
-                        <p>Last Name</p>
-                        <input type="text" name="lastName" id="lastName" onChange={handleLastNumber}/>
-                    </div>
-                    <div className="infoItemsContainer">
-                        <p>Country</p>
-                        <input type="text" name="country" id="country" value={country} onChange={handleCountry}/>
-                    </div>
-                    <div>
-                        <p>Phone Number</p>
-                        <input type="tel" name="phoneNumber" id="phoneNumber" value={phoneNumber} onChange={handlePhoneNumber} />
-                    </div>
-                </div>
-                <div className='saveContact'>
-                   
-                
-                <button onClick={submitButton}>Submit</button>
-                </div>
-                
-            </div>
-        </div>
+                )
+            }}
+              
+        </Formik>
+      
     )
 }
 

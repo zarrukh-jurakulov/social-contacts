@@ -1,81 +1,68 @@
 .sign-up-page {
-   display: flex;
-   align-items: center;
-   flex-direction: column;
-   width: 100%;
-   height: 1000px;
-   text-align: left;
-  
-}
-
-/* h1 {
-    margin: 0;
-    padding: 0;
-} */
-
-.form-container-register {
+    width: 100%;
+    height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    border: 1px solid black;
-    width: 500px;
-    height: 90vh;
-    
+    flex-direction: row;
 }
 
-#username {
-    width: 400px;
-    height: 30px;
-    margin-top: 7px;
-    outline-style: none;
-    border: 1px solid black;
-    padding: 0px 5px;
-    font-size: 18px;
-    
+.signUpLeftColumn {
+    width: 50%;
+}
+
+.signUpLeftColumn img {
+    width: 100%;
+    height: 91vh;
+    margin-top: 10px;
+}
+
+.signUpRightColumn {
+    width: 50%;
+    height: 90vh;
+    display: flex;
+   flex-direction: column;
+}
+
+.form-container-register {
+    margin-top: 100px;
 }
 
 #first_name {
-    width: 400px;
-    height: 30px;
-   margin-top: 7px;
-   outline-style: none;
-   border: 1px solid black;
-   padding: 0px 5px;
-   font-size: 18px;
-  
+    width: 50%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    outline-style: none;
+    padding: 5px;
+    margin-top: 20px;
 }
 
 #last_name {
-    width: 400px;
-    height: 30px;
-    margin-top: 7px;
+    width: 50%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
     outline-style: none;
-    border: 1px solid black;
-    padding: 0px 5px;
-    font-size: 18px;
-    
+    padding: 5px;
+    margin-top: 20px;
 }
 
 #email {
-    width: 400px;
-    height: 30px;
-   margin-top: 7px;
-   outline-style: none;
-   border: 1px solid black;
-   padding: 0px 5px;
-   font-size: 18px;
- 
+    width: 50%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    outline-style: none;
+    padding: 5px;
+    margin-top: 20px;
 }
 
 #password {
-    width: 400px;
-    height: 30px;
-    margin-top: 7px;
+    width: 50%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
     outline-style: none;
-    border: 1px solid black;
-    padding: 0px 5px;
-    font-size: 18px;
+    padding: 5px;
 }
-
-

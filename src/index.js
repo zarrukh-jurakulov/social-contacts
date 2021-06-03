@@ -3,16 +3,16 @@ import {render} from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import { Provider } from 'react-redux'
-// import store from './redux/store'
+import { Provider } from 'react-redux'
+import store from './redux/store'
 
 const root = document.getElementById('root');
 
 render(
   <StrictMode>
-    {/* <Provider store={store}> */}
+    <Provider store={store}>
       <App /> 
-    {/* </Provider> */}
+    </Provider>
   </StrictMode>,
   root
 );

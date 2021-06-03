@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import axiosClient from '../../helpers/axiosClient'
 import DeleteContact from './delete-contact'
-import {AiOutlineHeart as FavouritesIcon, AiFillHeart as RemoveIcon} from 'react-icons/ai'
-import FavouriteContacts from './favourite-contacts'
-import {setFavorites,removeFavorites, getFavorites } from '../../helpers/storages'
+import avatar from '../../assets/man-303792_1280.png'
+
+
 import './style.css'
 
 const ContactList = () => {
@@ -34,22 +34,19 @@ const ContactList = () => {
          
             {getContact.map((i, index)=> 
             <div className="contact-list-card" key={index}>
+              
               <div className="card-start">
-             
+                <img src={avatar} alt="avatar" className="avatar" />
                 <p>{i.first_name}</p>
                 <p>{i.last_name}</p>
               </div>
 
-              <div className="card-end">
+              
                 <p>{i.country_code}</p>
                 <p>{i.phone_number}</p>
                 <DeleteContact id={i.id} />
-            
-               
-              </div>
-                 
             </div>)}
-              
+               
         </div>
     )
 }
